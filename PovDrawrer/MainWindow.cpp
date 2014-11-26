@@ -3,6 +3,7 @@
 #include "Led.h"
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsItemGroup>
 #include <QScreen>
 #include <QtMath>
 
@@ -55,6 +56,8 @@ void MainWindow::PopulateScene()
     {
         qreal columnAngle = ((360.0) / static_cast<qreal>(columns)) * static_cast<qreal>(i);
 
+        QList<QGraphicsItem*> ledColumn;
+
         for (int j = 0; j < itemsPerColumn; ++j)
         {
             QColor color;
@@ -92,11 +95,9 @@ void MainWindow::PopulateScene()
             QPointF pos = QPointF(xpos, ypos);
             item->setPos(pos);
 
-            /* Account for rotation */
-            QPointF origin = item->boundingRect().center();
-            origin.setY(origin.y() + radius - item->boundingRect().height());
-            item->setTransformOriginPoint(origin);
-            item->setRotation(columnAngle);
+            ledColumn.push_back(item);
         }
+        QGraphicsItemGroup *column = scene->createItemGroup(ledColumn);
+        column->setRotation(columnAngle);
     }
 }
