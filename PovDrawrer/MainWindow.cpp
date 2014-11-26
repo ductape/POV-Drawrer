@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     PopulateScene();
 
     QGraphicsView *view = new QGraphicsView(scene);
+    view->setMinimumSize(scene->sceneRect().size().toSize());
     view->show();
     this->setCentralWidget(view);
     setWindowTitle(tr("Pov Drawrer"));
