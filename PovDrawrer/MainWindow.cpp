@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view->show();
     this->setCentralWidget(view);
     setWindowTitle(tr("Pov Drawrer"));
+
+    //dynamic_cast<Led*>(scene->items()[0])->setColor(Qt::red);
 }
 
 MainWindow::~MainWindow()
