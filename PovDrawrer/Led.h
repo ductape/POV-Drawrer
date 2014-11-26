@@ -11,11 +11,15 @@ public:
 
     void setScreenDpi(qreal dpi);
     qreal screenDpi() const;
+
     void setLedSizeInches(qreal inches);
     qreal ledSizeInches() const;
 
     void setCenterPos(const QPointF &pos);
     QPointF centerPos() const;
+
+    void setColor(const QColor &color);
+    QColor color() const;
 
 private:
     qreal dpi;

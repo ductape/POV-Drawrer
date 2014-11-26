@@ -16,8 +16,7 @@ Led::Led(const QColor color, int x, int y) :
     qreal diameter = this->dpi * this->sizeInches;
 
     this->setRect(QRectF((diameter/2) + x, (-diameter/2) - y, diameter, diameter));
-    this->setPen(QPen(color.darker()));
-    this->setBrush(QBrush(color));
+    this->setColor(color);
 }
 
 void Led::setScreenDpi(qreal dpi)
@@ -54,4 +53,16 @@ QPointF Led::centerPos() const
     qreal ypos = this->pos().y() - (this->boundingRect().height());
     QPointF pos = QPointF(xpos, ypos);
     return pos;
+}
+
+void Led::setColor(const QColor &color)
+{
+    this->setPen(QPen(color.darker()));
+    this->setBrush(QBrush(color));
+    this->update();
+}
+
+QColor Led::color() const
+{
+    return this->brush().color();
 }
