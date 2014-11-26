@@ -14,6 +14,9 @@ public:
     void setLedSizeInches(qreal inches);
     qreal ledSizeInches() const;
 
+    void setCenterPos(const QPointF &pos);
+    QPointF centerPos() const;
+
 private:
     qreal dpi;
     qreal sizeInches;

@@ -39,3 +39,19 @@ qreal Led::ledSizeInches() const
 {
     return this->sizeInches;
 }
+
+void Led::setCenterPos(const QPointF &pos)
+{
+    qreal xpos = pos.x() - (this->boundingRect().width());
+    qreal ypos = pos.y() + (this->boundingRect().height());
+    QPointF position = QPointF(xpos, ypos);
+    this->setPos(position);
+}
+
+QPointF Led::centerPos() const
+{
+    qreal xpos = this->pos().x() + (this->boundingRect().width());
+    qreal ypos = this->pos().y() - (this->boundingRect().height());
+    QPointF pos = QPointF(xpos, ypos);
+    return pos;
+}

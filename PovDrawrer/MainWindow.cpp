@@ -51,12 +51,9 @@ void MainWindow::PopulateScene()
     scene->addItem(circle);
 
     QRectF circleRect = circle->boundingRect();
-    QPointF circleCenter = circleRect.center();
 
     for (int i = 0; i < columns; ++i)
     {
-        qreal columnAngle = ((360.0) / static_cast<qreal>(columns)) * static_cast<qreal>(i);
-
         QList<QGraphicsItem*> ledColumn;
 
         for (int j = 0; j < itemsPerColumn; ++j)
@@ -86,19 +83,16 @@ void MainWindow::PopulateScene()
                 break;
             }
 
-            Led *item = new Led(color, circleCenter.x(), circleCenter.y());
+            Led *item = new Led(color);
             item->setParentItem(circle);
 
             /* Set the initial position to the middle of the circle accounting for the center of the shape */
             qreal radius = ((circleRect.height()-(insideDiameterKeepout*physY))/2.0/itemsPerColumn*(j + 1))+(insideDiameterKeepout*physY/2.0);
-            qreal xpos = circleCenter.x() - (item->boundingRect().width());
-            qreal ypos = circleCenter.y() + (item->boundingRect().height()) - radius;
-            QPointF pos = QPointF(xpos, ypos);
-            item->setPos(pos);
-
+            item->setCenterPos(QPointF(circleRect.center().x(), circleRect.center().y() - radius));
             ledColumn.push_back(item);
         }
         QGraphicsItemGroup *column = scene->createItemGroup(ledColumn);
+        qreal columnAngle = ((360.0) / static_cast<qreal>(columns)) * static_cast<qreal>(i);
         column->setRotation(columnAngle);
     }
 }
