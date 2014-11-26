@@ -4,6 +4,9 @@
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItemGroup>
+#include <QHBoxLayout>
+#include <QFormLayout>
+#include <QSpinBox>
 #include <QScreen>
 #include <QtMath>
 
@@ -13,19 +16,34 @@ static const qreal WORK_SCREEN_Y_DPI = 1080 / 10.5;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    numberOfColumns(100)
 {
     ui->setupUi(this);
     scene = new QGraphicsScene(this);
-    PopulateScene();
+    PopulateScene(this->numberOfColumns);
 
     QGraphicsView *view = new QGraphicsView(scene);
     view->setMinimumSize(scene->sceneRect().size().toSize());
     view->show();
-    this->setCentralWidget(view);
+
+    QSpinBox *spinBox = new QSpinBox;
+    spinBox->setMaximum(INT_MAX);
+    spinBox->setMinimum(INT_MIN);
+    spinBox->setValue(this->numberOfColumns);
+    QFormLayout *form = new QFormLayout;
+    form->addRow(tr("Number of columns"), spinBox);
+
+
+    QHBoxLayout *mainHBox = new QHBoxLayout;
+    mainHBox->addWidget(view);
+    mainHBox->addStretch();
+    mainHBox->addLayout(form);
+    this->centralWidget()->setLayout(mainHBox);
     setWindowTitle(tr("Pov Drawrer"));
 
     //dynamic_cast<Led*>(scene->items()[0])->setColor(Qt::red);
+    connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(PopulateScene(int)));
 }
 
 MainWindow::~MainWindow()
@@ -34,11 +52,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::PopulateScene()
+void MainWindow::PopulateScene(int numberColumns)
 {
     static const qreal diameterInch = 3.74;
     static const qreal insideDiameterKeepout = 1.0;
-    int columns = 100;
+    this->numberOfColumns = numberColumns;
     int itemsPerColumn = 8;
 
     qreal physX = logicalDpiX();
@@ -54,7 +72,7 @@ void MainWindow::PopulateScene()
 
     QRectF circleRect = circle->boundingRect();
 
-    for (int i = 0; i < columns; ++i)
+    for (int i = 0; i < this->numberOfColumns; ++i)
     {
         QList<QGraphicsItem*> ledColumn;
 
@@ -94,7 +112,7 @@ void MainWindow::PopulateScene()
             ledColumn.push_back(item);
         }
         QGraphicsItemGroup *column = scene->createItemGroup(ledColumn);
-        qreal columnAngle = ((360.0) / static_cast<qreal>(columns)) * static_cast<qreal>(i);
+        qreal columnAngle = ((360.0) / static_cast<qreal>(this->numberOfColumns)) * static_cast<qreal>(i);
         column->setRotation(columnAngle);
     }
 }

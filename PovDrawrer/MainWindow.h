@@ -17,11 +17,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
-    void PopulateScene();
+private slots:
+    void PopulateScene(int numberColumns);
 
+private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    int numberOfColumns;
+
 };
 
 #endif // MAINWINDOW_H
