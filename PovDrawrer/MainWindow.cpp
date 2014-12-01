@@ -9,39 +9,38 @@
 #include <QSpinBox>
 #include <QScreen>
 #include <QtMath>
+#include <QDebug>
 
 static const qreal LED_SIZE_IN = 0.1259;
 static const qreal WORK_SCREEN_X_DPI = 1920 / 18.75;
 static const qreal WORK_SCREEN_Y_DPI = 1080 / 10.5;
+static const int SPIN_BOX_MIN_WIDTH = 70;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    numberOfColumns(100)
+    numberOfColumns(60)
 {
     ui->setupUi(this);
     scene = new QGraphicsScene(this);
     PopulateScene(this->numberOfColumns);
 
-    QGraphicsView *view = new QGraphicsView(scene);
-    view->setMinimumSize(scene->sceneRect().size().toSize());
-    view->show();
+    ui->graphicsView->setScene(scene);
+    ui->graphicsView->setMinimumSize(scene->sceneRect().size().toSize()*1.5);
+    ui->graphicsView->show();
 
     QSpinBox *spinBox = new QSpinBox;
     spinBox->setMaximum(INT_MAX);
     spinBox->setMinimum(INT_MIN);
     spinBox->setValue(this->numberOfColumns);
-    QFormLayout *form = new QFormLayout;
-    form->addRow(tr("Number of columns"), spinBox);
+    spinBox->setMinimumWidth(SPIN_BOX_MIN_WIDTH);
+    spinBox->setKeyboardTracking(false);
+    ui->formLayout->addRow(tr("Number of columns"), spinBox);
 
+    ui->textEdit->setReadOnly(true);
+    ui->textEdit->append(QString(tr("Columns")) + " " + QString::number(this->numberOfColumns));
 
-    QHBoxLayout *mainHBox = new QHBoxLayout;
-    mainHBox->addWidget(view);
-    mainHBox->addStretch();
-    mainHBox->addLayout(form);
-    this->centralWidget()->setLayout(mainHBox);
     setWindowTitle(tr("Pov Drawrer"));
-
     //dynamic_cast<Led*>(scene->items()[0])->setColor(Qt::red);
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(PopulateScene(int)));
 }
