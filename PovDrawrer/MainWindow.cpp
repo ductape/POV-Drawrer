@@ -38,7 +38,7 @@ void MainWindow::PopulateScene()
 {
     static const qreal diameterInch = 3.74;
     static const qreal insideDiameterKeepout = 1.0;
-    int columns = 100;
+    int columns = 32;
     int itemsPerColumn = 8;
 
     qreal physX = logicalDpiX();
