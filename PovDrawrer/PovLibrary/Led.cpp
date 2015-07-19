@@ -2,6 +2,8 @@
 #include <QtWidgets>
 
 static const qreal LED_SIZE_IN = 0.1259;
+static const qreal NOMINAL_SCREEN_DPI = 96.0;
+static const QColor DEFAULT_COLOR = Qt::red;
 
 /**
  * @brief Led::Led creates a QGraphicsEllipseItem that is set with the defaults of a special LED type.
@@ -9,14 +11,25 @@ static const qreal LED_SIZE_IN = 0.1259;
  * @param x - the x coordinate for the center position of the LED
  * @param y - the y coordinate for hte center position of the LED
  */
-Led::Led(const QColor color, int x, int y) :
-    dpi(102.0),
+Led::Led(const QColor color, int x, int y, QGraphicsItem *parent) :
+    QGraphicsEllipseItem(parent),
+    dpi(NOMINAL_SCREEN_DPI),
     sizeInches(LED_SIZE_IN)
 {
     qreal diameter = this->dpi * this->sizeInches;
 
-    this->setRect(QRectF((diameter/2) + x, (-diameter/2) - y, diameter, diameter));
+    this->setRect(QRectF((diameter/2) + x, -(diameter/2) - y, diameter, diameter));
     this->setColor(color);
+}
+
+Led::Led(QGraphicsItem *parent) :
+    QGraphicsEllipseItem(parent),
+    dpi(NOMINAL_SCREEN_DPI),
+    sizeInches(LED_SIZE_IN)
+{
+    qreal diameter = this->dpi * this->sizeInches;
+    this->setRect(QRectF((diameter/2), -(diameter/2), diameter, diameter));
+    this->setColor(DEFAULT_COLOR);
 }
 
 void Led::setScreenDpi(qreal dpi)

@@ -7,7 +7,8 @@
 class Led : public QGraphicsEllipseItem
 {
 public:
-    explicit Led(const QColor color = Qt::red, int x = 0, int y = 0);
+    explicit Led(const QColor color = Qt::red, int x = 0, int y = 0, QGraphicsItem *parent = 0);
+    explicit Led(QGraphicsItem *parent = 0);
 
     void setScreenDpi(qreal dpi);
     qreal screenDpi() const;

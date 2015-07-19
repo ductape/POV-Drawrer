@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "Led.h"
+#include "PovLibrary/Led.h"
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItemGroup>
