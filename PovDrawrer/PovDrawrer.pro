@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    Led.cpp
+    Led.cpp \
+    PovLibrary/Led.cpp
 
 HEADERS  += MainWindow.h \
-    Led.h
+    Led.h \
+    PovLibrary/Led.h
 
 FORMS    += MainWindow.ui
