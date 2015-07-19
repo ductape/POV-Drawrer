@@ -14,11 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    Led.cpp \
-    PovLibrary/Led.cpp
+    PovLibrary/Led.cpp \
+    PovLibrary/LedColumn.cpp
 
 HEADERS  += MainWindow.h \
-    Led.h \
-    PovLibrary/Led.h
+    PovLibrary/Led.h \
+    PovLibrary/LedColumn.h
 
 FORMS    += MainWindow.ui
