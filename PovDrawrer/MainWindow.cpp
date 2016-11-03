@@ -1,11 +1,12 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "PovLibrary/Led.h"
+#include "PovLibrary/LedColumn.h"
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItemGroup>
 #include <QScreen>
 #include <QtMath>
+#include <QDebug>
 
 static const qreal LED_SIZE_IN = 0.1259;
 static const qreal WORK_SCREEN_X_DPI = 1920 / 18.75;
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setCentralWidget(view);
     setWindowTitle(tr("Pov Drawrer"));
 
-    //dynamic_cast<Led*>(scene->items()[0])->setColor(Qt::red);
+    this->resize(view->size()*1.2);
 }
 
 MainWindow::~MainWindow()
@@ -38,7 +39,7 @@ void MainWindow::PopulateScene()
 {
     static const qreal diameterInch = 3.74;
     static const qreal insideDiameterKeepout = 1.0;
-    int columns = 32;
+    int columns = 4;
     int itemsPerColumn = 8;
 
     qreal physX = logicalDpiX();
@@ -52,49 +53,44 @@ void MainWindow::PopulateScene()
     circle->setBrush(QBrush(Qt::blue));
     scene->addItem(circle);
 
-    QRectF circleRect = circle->boundingRect();
-
     for (int i = 0; i < columns; ++i)
     {
-        QList<QGraphicsItem*> ledColumn;
+        QColor color;
 
-        for (int j = 0; j < itemsPerColumn; ++j)
+        switch(i%5)
         {
-            QColor color;
+        case 1:
+            color = Qt::red;
+            break;
 
-            switch(i%5)
-            {
-            case 1:
-                color = Qt::red;
-                break;
+        case 2:
+            color = Qt::green;
+            break;
 
-            case 2:
-                color = Qt::green;
-                break;
+        case 3:
+            color = Qt::yellow;
+            break;
 
-            case 3:
-                color = Qt::yellow;
-                break;
+        case 4:
+            color = Qt::white;
+            break;
 
-            case 4:
-                color = Qt::white;
-                break;
-
-            default:
-                color = Qt::black;
-                break;
-            }
-
-            Led *item = new Led(color);
-            item->setParentItem(circle);
-
-            /* Set the initial position to the middle of the circle accounting for the center of the shape */
-            qreal radius = ((circleRect.height()-(insideDiameterKeepout*physY))/2.0/itemsPerColumn*(j + 1))+(insideDiameterKeepout*physY/2.0);
-            item->setCenterPos(QPointF(circleRect.center().x(), circleRect.center().y() - radius));
-            ledColumn.push_back(item);
+        default:
+            color = Qt::black;
+            break;
         }
-        QGraphicsItemGroup *column = scene->createItemGroup(ledColumn);
-        qreal columnAngle = ((360.0) / static_cast<qreal>(columns)) * static_cast<qreal>(i);
-        column->setRotation(columnAngle);
+
+        LedColumn *column = new LedColumn(itemsPerColumn, (diameterInch - insideDiameterKeepout)/2.0, circle);
+        column->setColor(color);
+        column->moveBy(-column->boundingRect().width()/2.0,insideDiameterKeepout*WORK_SCREEN_Y_DPI/2.0);
+       column->setTransformOriginPoint(0,0);
+       qDebug() << "Column[" << i << "] pos:" << column->pos() << ", bounding rect:" << column->boundingRect() << ", origin:" << column->transformOriginPoint() << ", rotation:" << column->rotation();
+
+        if (columns > 0)
+        {
+            column->setRotation((360/columns)*i);
+        }
+        qDebug() << "rColumn[" << i << "] pos:" << column->pos() << ", bounding rect:" << column->boundingRect() << ", origin:" << column->transformOriginPoint() << ", rotation:" << column->rotation();
     }
+    qDebug() << "circle pos:" << circle->pos() << ", bounding rect:" << circle->boundingRect() << ", origin:" << circle->transformOriginPoint() << ", rotation:" << circle->rotation() << ", center:" << circle->pos().x() + circle->boundingRect().width()/2 << "x" << circle->pos().y() + circle->boundingRect().height()/2;
 }

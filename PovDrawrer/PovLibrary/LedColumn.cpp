@@ -19,6 +19,8 @@ public:
 LedColumn::LedColumn(quint32 numLeds, qreal heightInches, QGraphicsItem *parent) :
     QGraphicsItemGroup(parent)
 {
+    this->priv = new PrivateData;
+
     for(quint32 index = 0; index < numLeds; ++index)
     {
         Led *led = new Led(this);
@@ -26,7 +28,7 @@ LedColumn::LedColumn(quint32 numLeds, qreal heightInches, QGraphicsItem *parent)
 
         if (heightInches > 0.0)
         {
-            ledYPos = static_cast<qreal>(this->priv->ledList.size()) * heightInches / static_cast<qreal>(numLeds);
+            ledYPos = static_cast<qreal>(this->priv->ledList.size()) * heightInches * 100 / static_cast<qreal>(numLeds);
         }
         else
         {
@@ -41,7 +43,10 @@ LedColumn::LedColumn(quint32 numLeds, qreal heightInches, QGraphicsItem *parent)
         }
         led->setPos(led->pos().x(), ledYPos);
         this->priv->ledList.append(led);
+        this->addToGroup(led);
     }
+
+
 }
 
 LedColumn::~LedColumn()
